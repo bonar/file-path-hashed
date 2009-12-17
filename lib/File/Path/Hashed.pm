@@ -100,6 +100,60 @@ File::Path::Hashed - generate path including hash value directories
 
 =head1 DESCRIPTION
 
+When you have to create 10000 files on your local disk or on
+servers, It takes time very much to seek files. In such case
+you had better create subdirectries to reduce the number of 
+the files in one directory.
+
+File::Path::Hashed::make_hash_path() creates subdirectories 
+for specified file with MD5 hash value.
+
+=head1 FUNCTION
+
+=over
+
+=item hash_path(filename => $fileame, %options)
+
+returns path string for $filename. example:
+
+  my $path = hash_path(filename => 'foo.txt');
+  say $path; # /tmp/4f/d8/foo.txt
+
+This pass consists of it as follows:
+
+  (BASE_DIRECTRY) + (HASH SUBDIRECTORIES) + (FILENAME)
+
+options
+
+=over
+
+=item base_dir
+
+specify base(prefix) directory. File::Spec->tmpdir() is the default.
+
+=item depth
+
+specify hash subdirectory depth. 2 is the default.
+
+  hash_path(filename => 'foo.txt', depth => 3);
+  # /tmp/4f/d8/cc/foo.txt
+
+=item length
+
+specify hash subdirectory name length. 2 is the default.
+
+  hash_path(filename => 'foo.txt', length => 4);
+  # /tmp/4fd8/cc85/foo.txt
+
+=back
+
+=item make_hash_path(filename => $filename, %option)
+
+create hashed directory for $filename with File::Path::make_path().
+Options is same as hash_path().
+
+=back
+
 =head1 AUTHOR
 
 Nakano Kyohei (bonar) <bonar@cpan.com>
