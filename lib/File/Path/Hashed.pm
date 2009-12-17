@@ -5,9 +5,10 @@ use strict;
 use warnings;
 
 use File::Path qw/make_path/;
+use File::Basename qw/dirname/;
 use File::Spec;
 use Digest::MD5 qw/md5_hex/;
-use Carp qw/croak/;
+use Carp qw/carp croak/;
 
 use constant {
     DEFAULT_DEPTH  => 2,
@@ -48,11 +49,23 @@ sub hash_path {
     for (my $i = 0; $i < ($depth * $length); $i += $length) {
         push @subdir, (join '', splice @hash, 0, $length);
     }
-    return File::Spec->catfile($base_dir, @subdir);
+    return File::Spec->catfile($base_dir, @subdir, $filename);
 }
 
 sub make_hash_path {
+    my %arg = @_;
 
+    my $path = hash_path(%arg);
+    return if !defined $path;
+    return $path if -f $path;
+
+    my $dir = dirname($path);
+    return $path if -d $dir;
+    unless (make_path($dir)) {
+        carp "create path [$dir] failed.";
+        return;
+    }
+    return $path;
 }
 
 1;
