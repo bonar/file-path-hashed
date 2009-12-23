@@ -21,6 +21,8 @@ our @EXPORT_OK = qw/
     make_hash_path
 /;
 
+our $VERSION = '0.02';
+
 sub hash_path {
     my %arg = @_;
     my $filename = delete $arg{filename};
